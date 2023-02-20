@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from skills import Skill
+from skills import WarriorSkill, ThiefSkill, Skill
 
 
 @dataclass
@@ -14,9 +14,9 @@ class UnitClass:
     skill: Skill
 
 
-WarriorClass = ...  # TODO Инициализируем экземпляр класса UnitClass и присваиваем ему необходимые значения аттрибуотов
+WarriorClass = UnitClass("Воин", 50, 40, 10, 5, 15, WarriorSkill)
 
-ThiefClass = ...  # TODO действуем так же как и с войном
+ThiefClass = UnitClass("Вор", 30, 30, 40, 15, 5, ThiefSkill)
 
 unit_classes = {
     ThiefClass.name: ThiefClass,

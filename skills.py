@@ -1,70 +1,51 @@
-from __future__ import annotations
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from unit import BaseUnit
+from abc import abstractmethod, ABC
+from dataclasses import dataclass
 
 
-class Skill(ABC):
-    """
-    Базовый класс умения
-    """
+@dataclass
+class SkillData:
+    name: str
+    damage: float
+    required_stamina: float
     user = None
     target = None
 
-    @property
-    @abstractmethod
-    def name(self):
-        pass
 
-    @property
-    @abstractmethod
-    def stamina(self):
-        pass
-
-    @property
-    @abstractmethod
-    def damage(self):
-        pass
+class Skill(ABC, SkillData):
 
     @abstractmethod
     def skill_effect(self) -> str:
         pass
 
-    def _is_stamina_enough(self):
-        return self.user.stamina > self.stamina
-
-    def use(self, user: BaseUnit, target: BaseUnit) -> str:
-        """
-        Проверка, достаточно ли выносливости у игрока для применения умения.
-        Для вызова скилла везде используем просто use
-        """
+    def use(self, user, target) -> str:
         self.user = user
         self.target = target
-        if self._is_stamina_enough:
+        if user.stamina_point >= self.required_stamina:
             return self.skill_effect()
-        return f"{self.user.name} попытался использовать {self.name} но у него не хватило выносливости."
+        return f"{self.user.nickname} попытался использовать {self.name}, но у него не хватило выносливости."
 
 
-class FuryPunch(Skill):
-    name = ...
-    stamina = ...
-    damage = ...
+class PierceThrough(Skill, ABC):
 
-    def skill_effect(self):
-        # TODO логика использования скилла -> return str
-        # TODO в классе нам доступны экземпляры user и target - можно использовать любые их методы
-        # TODO именно здесь происходит уменшение стамины у игрока применяющего умение и
-        # TODO уменьшение здоровья цели.
-        # TODO результат применения возвращаем строкой
-        pass
+    def skill_effect(self) -> str:
+        self.target.damage_received(self.damage)
+        self.user.stamina_point -= self.required_stamina
+
+        return f"{self.user.nickname} использует {self.name} и наносит {self.damage} урона сопернику."
 
 
-class HardShot(Skill):
-    name = ...
-    stamina = ...
-    damage = ...
+class HitBack(Skill):
+    def skill_effect(self) -> str:
+        self.target.damage_received(self.damage)
+        self.user.stamina_point -= self.required_stamina
 
-    def skill_effect(self):
-        pass
+        return f"{self.user.nickname} использует {self.name} и наносит {self.damage} урона сопернику."
+
+
+WarriorSkill = PierceThrough("Пронзающий клинок", 15, 2)
+ThiefSkill = HitBack("Удар в спину", 20, 3)
+
+skills = {
+    WarriorSkill.name: WarriorSkill,
+    ThiefSkill.name: ThiefSkill
+}
