@@ -1,7 +1,6 @@
 import random
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-
 from classes import UnitClass
 from equipment import Weapon, Armor
 
@@ -92,7 +91,6 @@ class Enemy(BaseUnit):
 
             return f"{self.nickname} используя {self.weapon.name} наносит удар, но {target.armor.name} cоперника его останавливает."
         return self.skill_use(target)
-
 
     def skill_use(self, target) -> str:
         if self._use_skill:

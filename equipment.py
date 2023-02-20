@@ -1,9 +1,9 @@
 from dataclasses import dataclass
+import random
 from typing import List
 import marshmallow
 import marshmallow_dataclass
 import json
-
 
 @dataclass
 class Armor:
@@ -22,8 +22,12 @@ class Weapon:
     stamina_per_hit: float
 
     @property
-    def damage(self) -> float:
-        return self.damage.uniform(self.min_damage, self.max_damage)
+    def random_damage(self) -> float:
+        return random.uniform(self.min_damage, self.max_damage)
+
+
+def random_damage(min_damage: float, max_damage: float) -> float:
+    return random.uniform(min_damage, max_damage)
 
 
 WeaponSchema = marshmallow_dataclass.class_schema(Weapon)
@@ -38,7 +42,7 @@ class EquipmentData:
         unkwnown = marshmallow.EXCLUDE
 
 
-EquipmentdataSchema = marshmallow_dataclass.class_schema(EquipmentData)
+EquipmentDataSchema = marshmallow_dataclass.class_schema(EquipmentData)
 
 
 class Equipment():
@@ -47,8 +51,8 @@ class Equipment():
 
     def _get_equipmentdata_class(self) -> List[EquipmentData]:
         try:
-            with open("data/equirement.json", "r", encoding="utf-8") as f:
-                result = EquipmentdataSchema().load(json.load(f))
+            with open("data/equipment.json", "r", encoding="utf-8") as f:
+                result = EquipmentDataSchema().load(json.load(f))
                 return result
         except:
             raise "ошибка в открытие файла "
