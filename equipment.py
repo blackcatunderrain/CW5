@@ -5,6 +5,7 @@ import marshmallow
 import marshmallow_dataclass
 import json
 
+
 @dataclass
 class Armor:
     id: int
@@ -35,7 +36,7 @@ WeaponSchema = marshmallow_dataclass.class_schema(Weapon)
 
 @dataclass
 class EquipmentData:
-    weapons: List[Weapon]
+    weapons: list[Weapon]
     armors: list[Armor]
 
     class Meta:

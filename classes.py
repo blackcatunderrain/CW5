@@ -14,9 +14,9 @@ class UnitClass:
     skill: Skill
 
 
-WarriorClass = UnitClass("Воин", 50, 40, 10, 5, 15, WarriorSkill)
+WarriorClass = UnitClass("Воин", 200, 40, 4, 5, 15, WarriorSkill)
 
-ThiefClass = UnitClass("Вор", 30, 30, 40, 15, 5, ThiefSkill)
+ThiefClass = UnitClass("Вор", 200, 30, 3, 15, 5, ThiefSkill)
 
 unit_classes = {
     ThiefClass.name: ThiefClass,
